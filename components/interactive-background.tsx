@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { DollarSign, Coins, CreditCard, Banknote } from "lucide-react";
+import Image from "next/image";
 
 interface FloatingElement {
   id: number;
@@ -43,8 +44,9 @@ export function InteractiveBackground() {
   const [floaters, setFloaters] = useState<
     ReturnType<typeof generateFloatingData>
   >([]);
+
   useEffect(() => {
-    setFloaters(generateFloatingData(15));
+    setFloaters(generateFloatingData(12));
   }, []);
   // Initialize floating elements
   useEffect(() => {
@@ -210,18 +212,27 @@ export function InteractiveBackground() {
       {floaters.map((f, i) => (
         <motion.div
           key={`particle-${i}`}
-          className="absolute w-1 h-1 bg-orange-300/30 rounded-full"
+          className="absolute rounded-full flex justify-center items-center"
           initial={f.from}
           animate={{
-            ...f.to,
+            x: [f.to.x, f.from.x, f.to.x],
+            y: [f.to.y, f.from.y, f.to.y],
             opacity: [0.3, 0.8, 0.3],
+            rotate: [0, 360, 0]
           }}
           transition={{
             duration: f.duration,
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-        />
+        >
+          <Image
+            src="/orange-mascot.png"
+            alt="OrangeMascot"
+            width={100}
+            height={100}
+          />
+        </motion.div>
       ))}
     </div>
   );
