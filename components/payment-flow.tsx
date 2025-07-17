@@ -47,10 +47,6 @@ export function PaymentFlow({
   onBack,
   isWeb3Connected,
   onConnectWallet,
-  playClickSound,
-  playTransitionSound,
-  playSuccessSound,
-  playWeb3ConnectSound,
 }: {
   paymentStep: PaymentStep;
   setPaymentStep: (step: PaymentStep) => void;
@@ -61,16 +57,11 @@ export function PaymentFlow({
   onBack: () => void;
   isWeb3Connected: boolean;
   onConnectWallet: () => void;
-  playClickSound: () => void;
-  playTransitionSound: () => void;
-  playSuccessSound: () => void;
-  playWeb3ConnectSound: () => void;
 }) {
   const nextStep = () => {
     const currentIndex = paymentSteps.indexOf(paymentStep);
     if (currentIndex < paymentSteps.length - 1) {
       setPaymentStep(paymentSteps[currentIndex + 1]);
-      playTransitionSound(); // Play sound on step change
     }
   };
 
@@ -78,7 +69,6 @@ export function PaymentFlow({
     const currentIndex = paymentSteps.indexOf(paymentStep);
     if (currentIndex > 0) {
       setPaymentStep(paymentSteps[currentIndex - 1]);
-      playTransitionSound(); // Play sound on step change
     } else {
       onBack();
     }
@@ -86,10 +76,8 @@ export function PaymentFlow({
 
   const handlePayment = () => {
     setPaymentStep("processing");
-    playClickSound(); // Play sound on payment initiation
     setTimeout(() => {
       setPaymentStep("success");
-      playSuccessSound(); // Play sound on payment success
     }, 3000);
   };
 
@@ -103,8 +91,6 @@ export function PaymentFlow({
           onBack={prevStep}
           isWeb3Connected={isWeb3Connected}
           onConnectWallet={onConnectWallet}
-          playClickSound={playClickSound}
-          playWeb3ConnectSound={playWeb3ConnectSound}
         />
       )}
       {paymentStep === "details" && (
@@ -114,7 +100,6 @@ export function PaymentFlow({
           onBack={prevStep}
           onNext={handlePayment}
           selectedMethod={selectedMethod}
-          playClickSound={playClickSound}
         />
       )}
       {paymentStep === "processing" && <ProcessingStep />}
@@ -130,8 +115,6 @@ function PaymentMethodStep({
   onBack,
   isWeb3Connected,
   onConnectWallet,
-  playClickSound,
-  playWeb3ConnectSound,
 }: {
   selectedMethod: string;
   setSelectedMethod: (method: string) => void;
@@ -139,8 +122,6 @@ function PaymentMethodStep({
   onBack: () => void;
   isWeb3Connected: boolean;
   onConnectWallet: () => void;
-  playClickSound: () => void;
-  playWeb3ConnectSound: () => void;
 }) {
   return (
     <motion.div
@@ -180,10 +161,8 @@ function PaymentMethodStep({
             onClick={() => {
               if (method.available) {
                 setSelectedMethod(method.id);
-                playClickSound(); // Play sound on method selection
               } else if (method.id === "web3") {
                 onConnectWallet();
-                playWeb3ConnectSound(); // Play sound on connect wallet attempt
               }
             }}
             whileHover={method.available ? { scale: 1.02 } : {}}
@@ -280,14 +259,12 @@ function PaymentDetailsStep({
   onBack,
   onNext,
   selectedMethod,
-  playClickSound,
 }: {
   formData: any;
   setFormData: (data: any) => void;
   onBack: () => void;
   onNext: () => void;
   selectedMethod: string;
-  playClickSound: () => void;
 }) {
   const isWeb3Payment = selectedMethod === "web3";
 

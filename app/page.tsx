@@ -74,14 +74,6 @@ export default function FoxyGateway() {
     Record<string, { totalReceived: number; transactionCount: number }>
   >({});
 
-  // Initialize sounds
-  const playClickSound = useSound("/sounds/click.mp3", 0.3);
-  const playSuccessSound = useSound("/sounds/success.mp3", 0.5);
-  const playTransitionSound = useSound("/sounds/transition.mp3", 0.2);
-  const playWeb3ConnectSound = useSound("/sounds/web3-connect.mp3", 0.5);
-  const playQrCodeSound = useSound("/sounds/qr-code.mp3", 0.4);
-  const playDeleteSound = useSound("/sounds/delete.mp3", 0.5);
-
   // Add useEffect to load gateways from localStorage
   useEffect(() => {
     const savedGateways = localStorage.getItem("foxyGateways");
@@ -96,12 +88,6 @@ export default function FoxyGateway() {
     }
   }, []);
 
-  // Play transition sound when mainStep changes
-  useEffect(() => {
-    if (mainStep !== "dashboard") {
-      playTransitionSound();
-    }
-  }, [mainStep, playTransitionSound]);
 
   const connectWeb3Wallet = async () => {
     if (typeof window !== "undefined" && (window as any).ethereum) {
@@ -111,7 +97,6 @@ export default function FoxyGateway() {
         });
         setWalletAddress(accounts[0]);
         setIsWeb3Connected(true);
-        playWeb3ConnectSound(); // Play sound on successful connection
       } catch (error) {
         console.error("Failed to connect wallet:", error);
       }
@@ -167,7 +152,6 @@ export default function FoxyGateway() {
     localStorage.setItem("foxyGatewayStats", JSON.stringify(updatedStats));
 
     setCreateStep("generated");
-    playSuccessSound(); // Play sound on gateway generated
   };
 
   // Add function to simulate payment received (for demo purposes)
@@ -181,7 +165,6 @@ export default function FoxyGateway() {
     };
     setGatewayStats(updatedStats);
     localStorage.setItem("foxyGatewayStats", JSON.stringify(updatedStats));
-    playClickSound(); // Play sound on simulate payment
   };
 
   // Add function to delete gateway
@@ -195,7 +178,6 @@ export default function FoxyGateway() {
 
     localStorage.setItem("foxyGateways", JSON.stringify(updatedGateways));
     localStorage.setItem("foxyGatewayStats", JSON.stringify(updatedStats));
-    playDeleteSound(); // Play sound on delete
   };
 
   const resetToMain = () => {
@@ -204,7 +186,6 @@ export default function FoxyGateway() {
     setCreateStep("form");
     setSelectedMethod("");
     setCurrentGateway(null);
-    playClickSound(); // Play sound on reset
   };
 
   return (
@@ -302,15 +283,12 @@ export default function FoxyGateway() {
                 <DashboardStep
                   onPay={() => {
                     setMainStep("pay");
-                    playClickSound();
                   }}
                   onCreate={() => {
                     setMainStep("create");
-                    playClickSound();
                   }}
                   onViewGateways={() => {
                     setMainStep("gateways");
-                    playClickSound();
                   }}
                   isWeb3Connected={isWeb3Connected}
                   walletAddress={walletAddress}
@@ -334,10 +312,6 @@ export default function FoxyGateway() {
                   onBack={resetToMain}
                   isWeb3Connected={isWeb3Connected}
                   onConnectWallet={connectWeb3Wallet}
-                  playClickSound={playClickSound}
-                  playTransitionSound={playTransitionSound}
-                  playSuccessSound={playSuccessSound}
-                  playWeb3ConnectSound={playWeb3ConnectSound}
                 />
               )}
 
@@ -350,9 +324,6 @@ export default function FoxyGateway() {
                   onBack={resetToMain}
                   onGenerate={generatePaymentGateway}
                   currentGateway={currentGateway}
-                  playClickSound={playClickSound}
-                  playTransitionSound={playTransitionSound}
-                  playSuccessSound={playSuccessSound}
                 />
               )}
 

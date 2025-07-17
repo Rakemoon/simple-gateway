@@ -15,9 +15,6 @@ export function CreateGatewayFlow({
   onBack,
   onGenerate,
   currentGateway,
-  playClickSound,
-  playTransitionSound,
-  playSuccessSound,
 }: {
   createStep: CreateStep;
   setCreateStep: (step: CreateStep) => void;
@@ -26,15 +23,11 @@ export function CreateGatewayFlow({
   onBack: () => void;
   onGenerate: () => void;
   currentGateway: PaymentGateway | null;
-  playClickSound: () => void;
-  playTransitionSound: () => void;
-  playSuccessSound: () => void;
 }) {
   const nextStep = () => {
     const currentIndex = createSteps.indexOf(createStep);
     if (currentIndex < createSteps.length - 1) {
       setCreateStep(createSteps[currentIndex + 1]);
-      playTransitionSound(); // Play sound on step change
     }
   };
 
@@ -42,7 +35,6 @@ export function CreateGatewayFlow({
     const currentIndex = createSteps.indexOf(createStep);
     if (currentIndex > 0) {
       setCreateStep(createSteps[currentIndex - 1]);
-      playTransitionSound(); // Play sound on step change
     } else {
       onBack();
     }
@@ -56,7 +48,6 @@ export function CreateGatewayFlow({
           setGatewayForm={setGatewayForm}
           onNext={nextStep}
           onBack={prevStep}
-          playClickSound={playClickSound}
         />
       )}
       {createStep === "preview" && (
@@ -64,14 +55,11 @@ export function CreateGatewayFlow({
           gatewayForm={gatewayForm}
           onBack={prevStep}
           onGenerate={onGenerate}
-          playClickSound={playClickSound}
         />
       )}
       {createStep === "generated" && currentGateway && (
         <GeneratedGateway
           gateway={currentGateway}
-          playClickSound={playClickSound}
-          playSuccessSound={playSuccessSound}
         />
       )}
     </AnimatePresence>
@@ -83,13 +71,11 @@ export function CreateGatewayForm({
   setGatewayForm,
   onNext,
   onBack,
-  playClickSound,
 }: {
   gatewayForm: any;
   setGatewayForm: (form: any) => void;
   onNext: () => void;
   onBack: () => void;
-  playClickSound: () => void;
 }) {
   return (
     <motion.div
@@ -278,12 +264,10 @@ function CreateGatewayPreview({
   gatewayForm,
   onBack,
   onGenerate,
-  playClickSound,
 }: {
   gatewayForm: any;
   onBack: () => void;
   onGenerate: () => void;
-  playClickSound: () => void;
 }) {
   return (
     <motion.div
@@ -395,20 +379,12 @@ function CreateGatewayPreview({
 
 function GeneratedGateway({
   gateway,
-  playClickSound,
-  playSuccessSound,
 }: {
   gateway: PaymentGateway;
-  playClickSound: () => void;
-  playSuccessSound: () => void;
 }) {
-  useEffect(() => {
-    playSuccessSound(); // Play success sound when component mounts
-  }, [playSuccessSound]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    playClickSound(); // Play sound on copy
   };
 
   const shareLink = () => {
@@ -421,7 +397,6 @@ function GeneratedGateway({
     } else {
       copyToClipboard(gateway.link);
     }
-    playClickSound(); // Play sound on share
   };
 
   return (
@@ -567,7 +542,6 @@ function GeneratedGateway({
         <Button
           onClick={() => {
             window.location.reload();
-            playClickSound(); // Play sound on create another gateway
           }}
           className="w-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium py-3 rounded-2xl shadow-neumorphic"
         >

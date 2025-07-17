@@ -164,19 +164,18 @@ export function InteractiveBackground() {
           </motion.div>
         )
       })}
-
       {/* Floating particles */}
       {Array.from({ length: 15 }).map((_, i) => (
         <motion.div
           key={`particle-${i}`}
           className="absolute w-1 h-1 bg-orange-300/30 rounded-full"
           initial={{
-            x: Math.random() * window?.innerWidth,
-            y: Math.random() * window?.innerHeight,
+            x: Math.random() * globalThis.window?.innerWidth,
+            y: Math.random() * globalThis.window?.innerHeight,
           }}
           animate={{
-            x: Math.random() * window?.innerWidth,
-            y: Math.random() * window?.innerHeight,
+            x: Math.random() * globalThis.window?.innerWidth,
+            y: Math.random() * globalThis.window?.innerHeight,
             opacity: [0.3, 0.8, 0.3],
           }}
           transition={{
