@@ -30,7 +30,7 @@ export function DashboardStep({
     >
       <div className="text-center mb-6">
         <motion.img
-          src="/placeholder.svg?height=100&width=100"
+          src="/orange-mascot.png"
           alt="Orange dashboard"
           className="w-24 h-24 mx-auto mb-4"
           initial={{ scale: 0, rotate: -180 }}

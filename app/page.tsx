@@ -189,7 +189,7 @@ export default function OrangeGateway() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 relative">
+    <div className="relative">
       {/* Interactive Background */}
       <InteractiveBackground />
 
@@ -197,50 +197,15 @@ export default function OrangeGateway() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-2"
+          className="flex grow justify-center gap-8 max-lg:flex-col max-lg:items-center"
         >
-          <div className="w-full justify-center h-max self-center">
+          <div className="justify-center h-max self-center max-lg:hidden">
             <AppTitle />
-            <AnimatePresence>
-              {/* Progress Indicator */}
-              {mainStep !== "dashboard" && (
-                <motion.div
-                  className="flex justify-center mt-6 space-x-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  exit={{ opacity: 0 }}
-                >
-                  {(mainStep === "pay"
-                    ? paymentSteps.slice(0, -1)
-                    : createSteps
-                  ).map((step, index) => {
-                    const currentIndex =
-                      mainStep === "pay"
-                        ? paymentSteps.indexOf(paymentStep)
-                        : createSteps.indexOf(createStep);
-
-                    return (
-                      <motion.div
-                        key={step}
-                        className={`w-3 h-3 rounded-full ${
-                          currentIndex >= index
-                            ? "bg-orange-400 shadow-neumorphic-small"
-                            : "bg-gray-200 shadow-neumorphic-inset"
-                        }`}
-                        whileHover={{ scale: 1.2 }}
-                        transition={{ type: "spring", stiffness: 400 }}
-                      />
-                    );
-                  })}
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Main Card */}
           <motion.div
-            className="bg-gradient-to-br from-white/90 to-gray-50/90 backdrop-blur-sm rounded-3xl shadow-neumorphic p-8 max-w-md"
+            className="bg-gradient-to-br from-white/90 to-gray-50/90 backdrop-blur-sm rounded-3xl shadow-neumorphic p-8 grow max-w-md max-lg:w-full"
             layout
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >

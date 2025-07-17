@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { DollarSign, Coins, CreditCard, Banknote } from "lucide-react";
 import Image from "next/image";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FloatingElement {
   id: number;
@@ -41,13 +42,14 @@ export function InteractiveBackground() {
   const [elements, setElements] = useState<FloatingElement[]>([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   const [floaters, setFloaters] = useState<
     ReturnType<typeof generateFloatingData>
   >([]);
 
   useEffect(() => {
-    setFloaters(generateFloatingData(12));
-  }, []);
+    setFloaters(generateFloatingData(isMobile ? 2 : 5));
+  }, [isMobile]);
   // Initialize floating elements
   useEffect(() => {
     const createElements = () => {
@@ -67,7 +69,7 @@ export function InteractiveBackground() {
         "text-teal-300/20",
       ];
 
-      for (let i = 0; i < 25; i++) {
+      for (let i = 0; i < (isMobile ? 10 : 25); i++) {
         const x = Math.random() * window.innerWidth;
         const y = Math.random() * window.innerHeight;
 
@@ -95,7 +97,7 @@ export function InteractiveBackground() {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isMobile]);
 
   // Track mouse movement
   useEffect(() => {
@@ -218,7 +220,7 @@ export function InteractiveBackground() {
             x: [f.to.x, f.from.x, f.to.x],
             y: [f.to.y, f.from.y, f.to.y],
             opacity: [0.3, 0.8, 0.3],
-            rotate: [0, 360, 0]
+            rotate: [0, 360, 0],
           }}
           transition={{
             duration: f.duration,

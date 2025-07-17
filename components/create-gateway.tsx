@@ -4,8 +4,30 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { ArrowLeft, ArrowRight, Check, Copy, LinkIcon, QrCode, Settings, Share2 } from "lucide-react";
-import { useEffect } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Copy,
+  LinkIcon,
+  QrCode,
+  Settings,
+  Share2,
+} from "lucide-react";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const icons = {
+  USDC: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+  BTC: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+  ETH: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+};
 
 export function CreateGatewayFlow({
   createStep,
@@ -58,9 +80,7 @@ export function CreateGatewayFlow({
         />
       )}
       {createStep === "generated" && currentGateway && (
-        <GeneratedGateway
-          gateway={currentGateway}
-        />
+        <GeneratedGateway gateway={currentGateway} />
       )}
     </AnimatePresence>
   );
@@ -86,7 +106,7 @@ export function CreateGatewayForm({
     >
       <div className="text-center mb-6">
         <motion.img
-          src="/placeholder.svg?height=80&width=80"
+          src="/orange-mascot.png"
           alt="Cute fox creating gateway"
           className="w-20 h-20 mx-auto mb-4"
           initial={{ scale: 0, rotate: -180 }}
@@ -144,8 +164,8 @@ export function CreateGatewayForm({
           />
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <motion.div
+        <div className="flex gap-4">
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -165,34 +185,67 @@ export function CreateGatewayForm({
               }
               className="w-full p-4 rounded-2xl shadow-neumorphic-inset border-0 focus:shadow-neumorphic-focus transition-all duration-300"
             />
-          </motion.div>
+          </motion.div> */}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
+            className="grow"
           >
             <Label
               htmlFor="currency"
-              className="text-sm font-medium text-gray-700 mb-2 block"
+              className="text-sm font-medium text-gray-700 mb-2 block w-full"
             >
               Currency
             </Label>
-            <select
-              id="currency"
-              value={gatewayForm.currency}
-              onChange={(e) =>
-                setGatewayForm({ ...gatewayForm, currency: e.target.value })
-              }
-              className="w-full p-4 rounded-2xl shadow-neumorphic-inset border-0 focus:shadow-neumorphic-focus transition-all duration-300 bg-white"
+            <Select
+              defaultValue="USDC"
+              onValueChange={(e) => {
+                setGatewayForm({ ...gatewayForm, currency: e });
+                (
+                  document.getElementById(
+                    "muisiki-currency"
+                  ) as HTMLImageElement
+                ).src = icons[e as keyof typeof icons];
+              }}
             >
-              <option value="USD">USD</option>
-              <option value="ETH">ETH</option>
-            </select>
+              <SelectTrigger
+                id="currency"
+                value={gatewayForm.currency}
+                className="w-full flex justify-start gap-4 p-4 rounded-2xl shadow-neumorphic-inset border-0 focus:shadow-neumorphic-focus transition-all duration-300 bg-white"
+              >
+                <img
+                  id="muisiki-currency"
+                  src={icons.USDC}
+                  alt="USDC"
+                  className="w-4"
+                />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl shadow-neumorphic-inset">
+                <SelectItem
+                  value="USDC"
+                  leftContent={
+                    <img src={icons.USDC} alt="USDC" className="w-4" />
+                  }
+                >
+                  USDC
+                </SelectItem>
+                <SelectItem
+                  value="ETH"
+                  leftContent={
+                    <img src={icons.ETH} alt="ETH" className="w-4" />
+                  }
+                >
+                  ETH
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </motion.div>
         </div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
@@ -220,7 +273,7 @@ export function CreateGatewayForm({
             }
             className="w-full p-4 rounded-2xl shadow-neumorphic-inset border-0 focus:shadow-neumorphic-focus transition-all duration-300"
           />
-        </motion.div>
+        </motion.div> */}
       </div>
 
       <div className="flex space-x-4">
@@ -377,12 +430,7 @@ function CreateGatewayPreview({
   );
 }
 
-function GeneratedGateway({
-  gateway,
-}: {
-  gateway: PaymentGateway;
-}) {
-
+function GeneratedGateway({ gateway }: { gateway: PaymentGateway }) {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
