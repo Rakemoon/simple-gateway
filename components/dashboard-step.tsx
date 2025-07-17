@@ -31,14 +31,14 @@ export function DashboardStep({
       <div className="text-center mb-6">
         <motion.img
           src="/placeholder.svg?height=100&width=100"
-          alt="Foxy dashboard"
+          alt="Orange dashboard"
           className="w-24 h-24 mx-auto mb-4"
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
         />
         <h2 className="text-xl font-semibold text-gray-800 mb-2">
-          Welcome to FoxyGateway
+          Welcome to OrangeGateway
         </h2>
         <p className="text-gray-600 text-sm">Choose your action below</p>
       </div>

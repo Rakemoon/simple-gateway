@@ -4,17 +4,9 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { AlertCircle, Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useSound } from "@/hooks/use-sound" // Import useSound
-import { useEffect } from "react"
 
 export default function NotFound() {
   const router = useRouter()
-  const playErrorSound = useSound("/sounds/error.mp3", 0.5) // Initialize error sound
-  const playClickSound = useSound("/sounds/click.mp3", 0.3) // Initialize click sound
-
-  useEffect(() => {
-    playErrorSound() // Play error sound when component mounts
-  }, [playErrorSound])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex items-center justify-center p-4">
@@ -30,12 +22,11 @@ export default function NotFound() {
           <Button
             onClick={() => {
               router.push("/")
-              playClickSound() // Play sound on button click
             }}
             className="w-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white font-medium py-3 rounded-2xl shadow-neumorphic"
           >
             <Home className="w-4 h-4 mr-2" />
-            Go to FoxyGateway
+            Go to OrangeGateway
           </Button>
         </div>
       </motion.div>

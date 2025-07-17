@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Foxy Gateway',
+  title: 'Orange Gateway',
   description: 'All in One Payment Gateway',
   generator: 'me',
 }

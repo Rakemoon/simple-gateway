@@ -17,7 +17,6 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useSound } from "@/hooks/use-sound" // Import useSound
 
 interface PaymentGateway {
   id: string
@@ -53,11 +52,6 @@ export function GatewayListFlow({
   const [selectedGateway, setSelectedGateway] = useState<PaymentGateway | null>(null)
   const [showQRCode, setShowQRCode] = useState<string | null>(null)
 
-  // Initialize sounds
-  const playClickSound = useSound("/sounds/click.mp3", 0.3)
-  const playQrCodeSound = useSound("/sounds/qr-code.mp3", 0.4)
-  const playDeleteSound = useSound("/sounds/delete.mp3", 0.5)
-
   const filteredGateways = gateways.filter(
     (gateway) =>
       gateway.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,7 +63,6 @@ export function GatewayListFlow({
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
-    playClickSound() // Play sound on copy
   }
 
   const shareLink = (gateway: PaymentGateway) => {
@@ -82,7 +75,6 @@ export function GatewayListFlow({
     } else {
       copyToClipboard(gateway.link)
     }
-    playClickSound() // Play sound on share
   }
 
   if (selectedGateway) {
@@ -92,14 +84,11 @@ export function GatewayListFlow({
         stats={gatewayStats[selectedGateway.id] || { totalReceived: 0, transactionCount: 0 }}
         onBack={() => {
           setSelectedGateway(null)
-          playClickSound() // Play sound on back
         }}
         onSimulatePayment={onSimulatePayment}
         onDelete={onDeleteGateway}
         onShare={shareLink}
         onCopy={copyToClipboard}
-        playClickSound={playClickSound} // Pass down click sound
-        playDeleteSound={playDeleteSound} // Pass down delete sound
       />
     )
   }
@@ -117,7 +106,6 @@ export function GatewayListFlow({
           <Button
             onClick={() => {
               onBack()
-              playClickSound() // Play sound on back
             }}
             variant="outline"
             size="sm"
@@ -210,7 +198,6 @@ export function GatewayListFlow({
                 className="bg-white rounded-2xl p-4 shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300 cursor-pointer"
                 onClick={() => {
                   setSelectedGateway(gateway)
-                  playClickSound() // Play sound on gateway click
                 }}
               >
                 <div className="flex items-start justify-between">
@@ -265,7 +252,6 @@ export function GatewayListFlow({
                       onClick={(e) => {
                         e.stopPropagation()
                         setShowQRCode(gateway.id)
-                        playQrCodeSound() // Play sound on QR code button click
                       }}
                       size="sm"
                       variant="outline"
@@ -302,7 +288,6 @@ export function GatewayListFlow({
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
             onClick={() => {
               setShowQRCode(null)
-              playClickSound() // Play sound on modal close
             }}
           >
             <motion.div
@@ -324,7 +309,6 @@ export function GatewayListFlow({
                 <Button
                   onClick={() => {
                     setShowQRCode(null)
-                    playClickSound() // Play sound on close button
                   }}
                   className="w-full bg-gradient-to-r from-orange-400 to-red-400 hover:from-orange-500 hover:to-red-500 text-white rounded-2xl shadow-neumorphic"
                 >
@@ -347,8 +331,6 @@ function GatewayDetails({
   onDelete,
   onShare,
   onCopy,
-  playClickSound, // Receive sound props
-  playDeleteSound, // Receive sound props
 }: {
   gateway: PaymentGateway
   stats: GatewayStats
@@ -357,8 +339,6 @@ function GatewayDetails({
   onDelete: (gatewayId: string) => void
   onShare: (gateway: PaymentGateway) => void
   onCopy: (text: string) => void
-  playClickSound: () => void
-  playDeleteSound: () => void
 }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
@@ -497,7 +477,6 @@ function GatewayDetails({
           <Button
             onClick={() => {
               onCopy(gateway.link)
-              playClickSound() // Play sound on copy
             }}
             variant="outline"
             className="py-3 rounded-2xl shadow-neumorphic border-0 bg-white hover:shadow-neumorphic-hover transition-all duration-300"
@@ -508,7 +487,6 @@ function GatewayDetails({
           <Button
             onClick={() => {
               onShare(gateway)
-              playClickSound() // Play sound on share
             }}
             variant="outline"
             className="py-3 rounded-2xl shadow-neumorphic border-0 bg-white hover:shadow-neumorphic-hover transition-all duration-300"
@@ -525,7 +503,6 @@ function GatewayDetails({
             <Button
               onClick={() => {
                 onSimulatePayment(gateway.id, Number.parseFloat(gateway.amount))
-                playClickSound() // Play sound on simulate payment
               }}
               size="sm"
               className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white rounded-xl shadow-neumorphic-small"
@@ -535,7 +512,6 @@ function GatewayDetails({
             <Button
               onClick={() => {
                 setShowDeleteConfirm(true)
-                playClickSound() // Play sound on delete button
               }}
               size="sm"
               variant="outline"
@@ -558,7 +534,6 @@ function GatewayDetails({
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
             onClick={() => {
               setShowDeleteConfirm(false)
-              playClickSound() // Play sound on modal close
             }}
           >
             <motion.div
@@ -580,7 +555,6 @@ function GatewayDetails({
                   <Button
                     onClick={() => {
                       setShowDeleteConfirm(false)
-                      playClickSound() // Play sound on cancel
                     }}
                     variant="outline"
                     className="flex-1 rounded-2xl shadow-neumorphic border-0 bg-white hover:shadow-neumorphic-hover"
@@ -591,7 +565,6 @@ function GatewayDetails({
                     onClick={() => {
                       onDelete(gateway.id)
                       onBack()
-                      playDeleteSound() // Play sound on confirm delete
                     }}
                     className="flex-1 bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-2xl shadow-neumorphic"
                   >

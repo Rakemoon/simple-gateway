@@ -113,7 +113,7 @@ export function SuccessStep() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        Thank you for using FoxyGateway. Your payment has been processed
+        Thank you for using OrangeGateway. Your payment has been processed
         successfully.
       </motion.p>
 
