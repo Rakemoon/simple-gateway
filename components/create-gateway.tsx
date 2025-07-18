@@ -23,10 +23,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const icons = {
+export const tokenIcons = {
   USDC: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
   BTC: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
   ETH: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+  LISK: "https://lisk.com/wp-content/themes/lisk-web-2024/static/ui/favicon/favicon-96x96.png",
 };
 
 export function CreateGatewayFlow({
@@ -207,7 +208,7 @@ export function CreateGatewayForm({
                   document.getElementById(
                     "muisiki-currency"
                   ) as HTMLImageElement
-                ).src = icons[e as keyof typeof icons];
+                ).src = tokenIcons[e as keyof typeof tokenIcons];
               }}
             >
               <SelectTrigger
@@ -217,7 +218,7 @@ export function CreateGatewayForm({
               >
                 <img
                   id="muisiki-currency"
-                  src={icons.USDC}
+                  src={tokenIcons.USDC}
                   alt="USDC"
                   className="w-4"
                 />
@@ -227,7 +228,7 @@ export function CreateGatewayForm({
                 <SelectItem
                   value="USDC"
                   leftContent={
-                    <img src={icons.USDC} alt="USDC" className="w-4" />
+                    <img src={tokenIcons.USDC} alt="USDC" className="w-4" />
                   }
                 >
                   USDC
@@ -235,7 +236,7 @@ export function CreateGatewayForm({
                 <SelectItem
                   value="ETH"
                   leftContent={
-                    <img src={icons.ETH} alt="ETH" className="w-4" />
+                    <img src={tokenIcons.ETH} alt="ETH" className="w-4" />
                   }
                 >
                   ETH
@@ -301,7 +302,7 @@ export function CreateGatewayForm({
         >
           <Button
             onClick={onNext}
-            disabled={!gatewayForm.title || !gatewayForm.amount}
+            disabled={!gatewayForm.title}
             className="w-full bg-gradient-to-r from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white font-medium py-3 rounded-2xl shadow-neumorphic disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Preview
@@ -318,7 +319,7 @@ function CreateGatewayPreview({
   onBack,
   onGenerate,
 }: {
-  gatewayForm: any;
+  gatewayForm: PaymentGateway;
   onBack: () => void;
   onGenerate: () => void;
 }) {
@@ -331,7 +332,7 @@ function CreateGatewayPreview({
     >
       <div className="text-center mb-6">
         <motion.img
-          src="/placeholder.svg?height=80&width=80"
+          src="/orange-mascot.png"
           alt="Cute fox previewing gateway"
           className="w-20 h-20 mx-auto mb-4"
           initial={{ scale: 0, rotate: 180 }}
@@ -362,15 +363,6 @@ function CreateGatewayPreview({
             </p>
           </div>
 
-          <div className="flex justify-between items-center py-3 border-t border-gray-200">
-            <span className="text-gray-600">Amount:</span>
-            <span className="font-semibold text-lg text-green-600">
-              {gatewayForm.currency === "ETH"
-                ? `${gatewayForm.amount} ETH`
-                : `$${gatewayForm.amount}`}
-            </span>
-          </div>
-
           {gatewayForm.recipientAddress && (
             <div className="flex justify-between items-center py-2 border-t border-gray-200">
               <span className="text-gray-600">Recipient:</span>
@@ -387,8 +379,15 @@ function CreateGatewayPreview({
 
           <div className="flex justify-between items-center py-2 border-t border-gray-200">
             <span className="text-gray-600">Currency:</span>
-            <span className="font-medium text-gray-800">
-              {gatewayForm.currency}
+            <span className="flex gap-4 items-center">
+              <img
+                className="size-4"
+                src={tokenIcons[gatewayForm.currency]}
+                alt={tokenIcons[gatewayForm.currency]}
+              />
+              <span className="font-medium text-gray-800">
+                {gatewayForm.currency}
+              </span>
             </span>
           </div>
         </div>
@@ -468,15 +467,6 @@ function GeneratedGateway({ gateway }: { gateway: PaymentGateway }) {
           <Check className="w-8 h-8 text-white" />
         </motion.div>
       </motion.div>
-
-      <motion.img
-        src="/placeholder.svg?height=100&width=100"
-        alt="Happy fox with generated gateway"
-        className="w-24 h-24 mx-auto mb-4"
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
-      />
 
       <motion.h2
         className="text-xl font-semibold text-gray-800 mb-2"
@@ -564,14 +554,6 @@ function GeneratedGateway({ gateway }: { gateway: PaymentGateway }) {
           <div className="flex justify-between">
             <span className="text-gray-600">Title:</span>
             <span className="font-medium text-gray-800">{gateway.title}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Amount:</span>
-            <span className="font-semibold text-green-600">
-              {gateway.currency === "ETH"
-                ? `${gateway.amount} ETH`
-                : `$${gateway.amount}`}
-            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Gateway ID:</span>

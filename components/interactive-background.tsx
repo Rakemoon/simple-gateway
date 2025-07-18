@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { DollarSign, Coins, CreditCard, Banknote } from "lucide-react";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { tokenIcons } from "./create-gateway";
 
 interface FloatingElement {
   id: number;
@@ -12,30 +13,9 @@ interface FloatingElement {
   y: number;
   size: number;
   rotation: number;
-  type: "dollar" | "coin" | "card" | "banknote";
-  color: string;
+  type: keyof typeof tokenIcons;
   initialX: number;
   initialY: number;
-}
-
-function generateFloatingData(length: number) {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  const floatings = [];
-  for (let i = 0; i < length; i += 1) {
-    floatings.push({
-      from: {
-        x: Math.random() * width,
-        y: Math.random() * height,
-      },
-      to: {
-        x: Math.random() * width,
-        y: Math.random() * height,
-      },
-      duration: 8 + Math.random() * 4,
-    });
-  }
-  return floatings;
 }
 
 export function InteractiveBackground() {
@@ -43,31 +23,12 @@ export function InteractiveBackground() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  const [floaters, setFloaters] = useState<
-    ReturnType<typeof generateFloatingData>
-  >([]);
 
-  useEffect(() => {
-    setFloaters(generateFloatingData(isMobile ? 2 : 5));
-  }, [isMobile]);
   // Initialize floating elements
   useEffect(() => {
     const createElements = () => {
       const newElements: FloatingElement[] = [];
-      const types: FloatingElement["type"][] = [
-        "dollar",
-        "coin",
-        "card",
-        "banknote",
-      ];
-      const colors = [
-        "text-orange-300/20",
-        "text-amber-300/20",
-        "text-yellow-300/20",
-        "text-green-300/20",
-        "text-emerald-300/20",
-        "text-teal-300/20",
-      ];
+      const types: FloatingElement["type"][] = ["ETH", "USDC", "LISK"];
 
       for (let i = 0; i < (isMobile ? 10 : 25); i++) {
         const x = Math.random() * window.innerWidth;
@@ -82,7 +43,6 @@ export function InteractiveBackground() {
           size: Math.random() * 30 + 20,
           rotation: Math.random() * 360,
           type: types[Math.floor(Math.random() * types.length)],
-          color: colors[Math.floor(Math.random() * colors.length)],
         });
       }
 
@@ -141,35 +101,19 @@ export function InteractiveBackground() {
     };
   };
 
-  const getIcon = (type: FloatingElement["type"]) => {
-    switch (type) {
-      case "dollar":
-        return DollarSign;
-      case "coin":
-        return Coins;
-      case "card":
-        return CreditCard;
-      case "banknote":
-        return Banknote;
-      default:
-        return DollarSign;
-    }
-  };
-
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 pointer-events-none overflow-hidden"
+      className="fixed inset-0 pointer-events-none overflow-hidden bg-orange-100"
       style={{ zIndex: 1 }}
     >
       {elements.map((element) => {
-        const Icon = getIcon(element.type);
         const position = calculatePosition(element);
 
         return (
           <motion.div
             key={element.id}
-            className={`absolute ${element.color}`}
+            className="absolute"
             initial={{
               x: element.initialX,
               y: element.initialY,
@@ -205,37 +149,19 @@ export function InteractiveBackground() {
                 delay: Math.random() * 2,
               }}
             >
-              <Icon size={element.size} className="drop-shadow-sm" />
+              <img
+                className="rounded-full overflow-hidden"
+                src={tokenIcons[element.type]}
+                alt={element.type}
+                style={{
+                  width: element.size,
+                  height: element.size,
+                }}
+              />
             </motion.div>
           </motion.div>
         );
       })}
-      {/* Floating particles */}
-      {floaters.map((f, i) => (
-        <motion.div
-          key={`particle-${i}`}
-          className="absolute rounded-full flex justify-center items-center"
-          initial={f.from}
-          animate={{
-            x: [f.to.x, f.from.x, f.to.x],
-            y: [f.to.y, f.from.y, f.to.y],
-            opacity: [0.3, 0.8, 0.3],
-            rotate: [0, 360, 0],
-          }}
-          transition={{
-            duration: f.duration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-        >
-          <Image
-            src="/orange-mascot.png"
-            alt="OrangeMascot"
-            width={100}
-            height={100}
-          />
-        </motion.div>
-      ))}
     </div>
   );
 }

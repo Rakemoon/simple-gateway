@@ -1,3 +1,4 @@
+import { tokenIcons } from "@/components/create-gateway";
 
 // Update the mainSteps to include 'gateways'
 export const mainSteps = ["dashboard", "pay", "create", "gateways"] as const;
@@ -13,9 +14,8 @@ export interface PaymentGateway {
   id: string;
   title: string;
   description: string;
-  amount: string;
   recipientAddress: string;
-  currency: "ETH" | "USD";
+  currency: keyof typeof tokenIcons;
   qrCode: string;
   link: string;
   createdAt: string;

@@ -17,18 +17,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-
-interface PaymentGateway {
-  id: string
-  title: string
-  description: string
-  amount: string
-  recipientAddress: string
-  currency: "ETH" | "USD"
-  qrCode: string
-  link: string
-  createdAt: string
-}
+import { PaymentGateway } from "@/constants"
 
 interface GatewayStats {
   totalReceived: number
@@ -219,7 +208,7 @@ export function GatewayListFlow({
                       <div>
                         <h3 className="font-semibold text-gray-800">{gateway.title}</h3>
                         <p className="text-sm text-gray-500">
-                          {gateway.currency === "ETH" ? `${gateway.amount} ETH` : `$${gateway.amount}`}
+                          {/* {gateway.currency === "ETH" ? `${gateway.amount} ETH` : `$${gateway.amount}`} */}
                         </p>
                       </div>
                     </div>
@@ -398,7 +387,7 @@ function GatewayDetails({
           <div>
             <span className="text-gray-600">Amount:</span>
             <p className="font-semibold text-green-600">
-              {gateway.currency === "ETH" ? `${gateway.amount} ETH` : `$${gateway.amount}`}
+              {/* {gateway.currency === "ETH" ? `${gateway.amount} ETH` : `$${gateway.amount}`} */}
             </p>
           </div>
           <div>
@@ -502,7 +491,7 @@ function GatewayDetails({
           <div className="grid grid-cols-2 gap-2">
             <Button
               onClick={() => {
-                onSimulatePayment(gateway.id, Number.parseFloat(gateway.amount))
+                // onSimulatePayment(gateway.id, Number.parseFloat(gateway.amount))
               }}
               size="sm"
               className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white rounded-xl shadow-neumorphic-small"

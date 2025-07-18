@@ -38,7 +38,7 @@ import {
   paymentSteps,
 } from "@/constants";
 import { PaymentFlow } from "@/components/payment-flow";
-import { CreateGatewayFlow } from "@/components/create-gateway";
+import { CreateGatewayFlow, tokenIcons } from "@/components/create-gateway";
 import Image from "next/image";
 import { AppTitle } from "@/components/app-title";
 
@@ -64,9 +64,8 @@ export default function OrangeGateway() {
   const [gatewayForm, setGatewayForm] = useState({
     title: "",
     description: "",
-    amount: "",
     recipientAddress: "",
-    currency: "USD" as "ETH" | "USD",
+    currency: "USDC" as keyof typeof tokenIcons,
   });
 
   // Add new state for gateway management
@@ -115,10 +114,6 @@ export default function OrangeGateway() {
       qrCodeDataUrl = await QRCode.toDataURL(link, {
         width: 200,
         margin: 2,
-        color: {
-          dark: "#f97316",
-          light: "#fff7ed",
-        },
       });
     } catch (error) {
       console.error("QR Code generation failed:", error);
@@ -128,7 +123,6 @@ export default function OrangeGateway() {
       id,
       title: gatewayForm.title,
       description: gatewayForm.description,
-      amount: gatewayForm.amount,
       recipientAddress: gatewayForm.recipientAddress,
       currency: gatewayForm.currency,
       qrCode: qrCodeDataUrl,
